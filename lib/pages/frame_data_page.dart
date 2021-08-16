@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final character = [
+  '関羽',
+  '張飛',
+  '趙雲',
+  '馬超',
+  '曹操',
   '夏侯惇',
   '夏侯淵',
   '楽進',
-  '甘寧',
-  '関羽',
-  '軍師',
-  '周泰',
   '徐晃',
-  '曹操',
   '孫権',
   '孫尚香',
-  '張飛',
-  '張遼',
-  '馬超',
+  '甘寧',
+  '周泰',
   '呂布',
-  '趙雲',
+  '張遼',
+  '軍師',
 ];
 
 List<String> framecolumns = [

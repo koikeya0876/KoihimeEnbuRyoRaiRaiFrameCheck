@@ -14,6 +14,7 @@ class AppState extends State<App> {
     TabItem.top: GlobalKey<NavigatorState>(),
     TabItem.framedata: GlobalKey<NavigatorState>(),
     TabItem.situation: GlobalKey<NavigatorState>(),
+    TabItem.hitconfirm: GlobalKey<NavigatorState>(),
     TabItem.memo: GlobalKey<NavigatorState>(),
   };
 
@@ -33,6 +34,10 @@ class AppState extends State<App> {
           _buildTabItem(
             TabItem.situation,
             '/situation',
+          ),
+          _buildTabItem(
+            TabItem.hitconfirm,
+            '/hitconfirm',
           ),
           _buildTabItem(
             TabItem.memo,

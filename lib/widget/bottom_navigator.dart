@@ -14,6 +14,7 @@ class BottomNavigation extends StatelessWidget {
         _buildItem(tabItem: TabItem.top),
         _buildItem(tabItem: TabItem.framedata),
         _buildItem(tabItem: TabItem.situation),
+        _buildItem(tabItem: TabItem.hitconfirm),
         _buildItem(tabItem: TabItem.memo),
       ],
       onTap: (index) => onSelectTab(

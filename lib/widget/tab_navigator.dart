@@ -1,8 +1,7 @@
-//import 'package:koihime_enbu_ryorairai_frame_check/pages/color_detail_page.dart';
-//import 'package:koihime_enbu_ryorairai_frame_check/pages/colors_list_page.dart';
 import 'package:koihime_enbu_ryorairai_frame_check/pages/top_page.dart';
 import 'package:koihime_enbu_ryorairai_frame_check/pages/frame_data_page.dart';
 import 'package:koihime_enbu_ryorairai_frame_check/pages/situation_page.dart';
+import 'package:koihime_enbu_ryorairai_frame_check/pages/hit_confirm_page.dart';
 import 'package:koihime_enbu_ryorairai_frame_check/pages/memo_page.dart';
 import 'package:koihime_enbu_ryorairai_frame_check/pages/unimplemented_page.dart';
 import 'package:koihime_enbu_ryorairai_frame_check/utils/tab_helper.dart';
@@ -30,8 +29,9 @@ class TabNavigator extends StatelessWidget {
       {
         '/top': (context) => TopPage(),
         '/framedata': (context) => FrameDataPage(),
-        //'/situation': (context) => SituationPage(),
-        '/situation': (context) => UnimplementedPage(),
+        '/situation': (context) => SituationPage(),
+        //'/hitconfirm': (context) => HitConfirmPage(),
+        '/hitconfirm': (context) => UnimplementedPage(),
         //'/memo': (context) => MemoPage(),
         '/memo': (context) => UnimplementedPage(),
       };
