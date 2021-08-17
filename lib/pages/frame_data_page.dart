@@ -69,6 +69,8 @@ class FrameDataPage extends StatelessWidget {
         title: Text('キャラ選択画面'),
       ),
       body: ListView.builder(
+        shrinkWrap: true,
+        padding: EdgeInsets.all(36.0),
         itemCount: character.length,
         itemBuilder: (context, index) {
           return ElevatedButton(
@@ -86,9 +88,8 @@ class FrameDataPage extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlue, //ボタンの背景色
               side: BorderSide(
-                //color: Colors.blue, //枠線!
                 color: Colors.white, //枠線!
-                width: 1, //枠線！
+                width: 2, //枠線！
               ),
             ),
           );

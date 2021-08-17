@@ -44,8 +44,6 @@ class _SituationPage extends State<SituationPage> {
     setSituations();
     _selectedAttackCharacter = '未選択';
     _selectedDefenceCharacter = '未選択';
-    //_selectedMove = '未選択';
-    //_selectedSituation = '未選択';
   }
 
   void setCharacters() {
@@ -236,6 +234,7 @@ class SituationDetailPage extends StatefulWidget {
 class _SituationDetailPage extends State<SituationDetailPage> {
   int? _situationFrame = 0;
   String _situation = '';
+  bool _cancelPossible = false;
   List<int> _attackLevel = [
     2,
     3,
@@ -274,6 +273,13 @@ class _SituationDetailPage extends State<SituationDetailPage> {
       if (key == 'アタックLV') attackLV = value;
       if (key == 'ガード硬化差') blockF = value;
       if (key == 'ヒット硬化差') hitF = value;
+      if (key == 'キャンセル') {
+        if (value == '×') {
+          _cancelPossible = false;
+        } else {
+          _cancelPossible = true;
+        }
+      }
     });
     if (blockF == "-" && widget._situation == "ガード") {
       _situationFrame = null;
@@ -301,6 +307,8 @@ class _SituationDetailPage extends State<SituationDetailPage> {
     } else {
       situation = '計算に失敗しました';
     }
+    if ((_situationFrame! >= 0 || _situationFrame! < 0) && _cancelPossible)
+      situation = situation + '（キャンセル可能）';
     setState(() {
       _situation = situation;
     });
@@ -322,6 +330,13 @@ class _SituationDetailPage extends State<SituationDetailPage> {
           punishList.add(element.id);
         }
       });
+    });
+    documentlist.forEach((element) {
+      if (punishList.indexOf(element.id) != -1) {
+        element.data()!.forEach((key, value) {
+          if (key == '状態' && value == '空中') punishList.remove(element.id);
+        });
+      }
     });
     documentlist.forEach((element) {
       if (punishList.indexOf(element.id) != -1) {
@@ -401,8 +416,12 @@ class _SituationDetailPage extends State<SituationDetailPage> {
       appBar: AppBar(
         title: Text('状況表示'),
       ),
-      body: ListView(children: <Widget>[
+      body:
+          ListView(shrinkWrap: true, padding: EdgeInsets.all(36.0), children: <
+              Widget>[
         Card(
+          elevation: 0,
+          color: Colors.white.withOpacity(0),
           child: Container(
             width: double.infinity,
             child: Text('状況設定',
@@ -425,6 +444,8 @@ class _SituationDetailPage extends State<SituationDetailPage> {
           ),
         ),
         Card(
+          elevation: 0,
+          color: Colors.white.withOpacity(0),
           child: Container(
             width: double.infinity,
             child: Text('有利不利',
@@ -439,12 +460,24 @@ class _SituationDetailPage extends State<SituationDetailPage> {
           ),
         ),
         Card(
+          elevation: 0,
+          color: Colors.white.withOpacity(0),
           child: Container(
             width: double.infinity,
             child: Text('確反リスト',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           ),
         ),
+        (widget._situation == "ガード" && _cancelPossible)
+            ? Card(
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                      'ガードした技はキャンセル可能技です。\n現在表示している確反リストはキャンセルしない場合の確反です。キャンセルされた場合はキャンセル後の技の確反を改めて確認してください。',
+                      style: TextStyle(height: 1.5, fontSize: 18)),
+                ),
+              )
+            : Card(),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Container(
