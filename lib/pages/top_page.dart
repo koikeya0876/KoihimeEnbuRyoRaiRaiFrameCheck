@@ -7,7 +7,7 @@ class TopPage extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('トップページ v1.0'),
+        title: Text('トップページ v1.01'),
       ),
       body: ListView(
         shrinkWrap: true,

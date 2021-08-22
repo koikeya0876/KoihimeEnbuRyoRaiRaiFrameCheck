@@ -30,8 +30,7 @@ class TabNavigator extends StatelessWidget {
         '/top': (context) => TopPage(),
         '/framedata': (context) => FrameDataPage(),
         '/situation': (context) => SituationPage(),
-        //'/hitconfirm': (context) => HitConfirmPage(),
-        '/hitconfirm': (context) => UnimplementedPage(),
+        '/hitconfirm': (context) => HitConfirmPage(),
         //'/memo': (context) => MemoPage(),
         '/memo': (context) => UnimplementedPage(),
       };
