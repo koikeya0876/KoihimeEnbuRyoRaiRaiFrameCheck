@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//フレーム表で選択するキャラクターリスト
 final character = [
   '関羽',
   '張飛',
@@ -20,6 +21,7 @@ final character = [
   '軍師',
 ];
 
+//フレーム表で表示するパラメータリスト
 List<String> framecolumns = [
   '技名',
   '状態',
@@ -62,6 +64,7 @@ List<String> framecolumns = [
   '備考',
 ];
 
+//フレーム表を表示するキャラクター選択画面
 class FrameDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -69,6 +72,7 @@ class FrameDataPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('キャラ選択画面'),
       ),
+      //キャラクター一覧をボタンとして表示
       body: ListView.builder(
         shrinkWrap: true,
         padding: EdgeInsets.all(36.0),
@@ -81,11 +85,12 @@ class FrameDataPage extends StatelessWidget {
               // "push"で新規画面に遷移
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) {
-                  // 遷移先の画面としてリスト追加画面を指定
+                  // 遷移先の画面としてフレーム表表示画面を指定、選択したキャラクターを引数として渡す
                   return FrameDataDetailPage(character[index]);
                 }),
               );
             },
+            //各キャラクターボタンのスタイル指定
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlue, //ボタンの背景色
               side: BorderSide(
@@ -100,8 +105,10 @@ class FrameDataPage extends StatelessWidget {
   }
 }
 
+//フレーム表表示画面
 class FrameDataDetailPage extends StatelessWidget {
   FrameDataDetailPage(this.character);
+  //選択したキャラクター
   final String character;
 
   @override
@@ -113,6 +120,7 @@ class FrameDataDetailPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
+            //FireStore内の各キャラクターのフレームデータを取得
             child: FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
                     .collection(character)
@@ -122,11 +130,13 @@ class FrameDataDetailPage extends StatelessWidget {
                   if (snapshot.hasData) {
                     final List<DocumentSnapshot> documents =
                         snapshot.data!.docs;
+                    //SingleChildScrollViewを2重にすることで縦横両方にスクロールできるようにする
                     return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Container(
                             child: SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
+                                //テーブルのカラムとしてframecolumnsを、ロウとしてFireStore内のフレームデータを使用する
                                 child: DataTable(
                                   columns: <DataColumn>[
                                     DataColumn(label: Text(framecolumns[0])),
@@ -172,6 +182,7 @@ class FrameDataDetailPage extends StatelessWidget {
                                       .map(
                                         (document) => DataRow(
                                           cells: [
+                                            //空の場合は'-'にし、String型に変換
                                             DataCell(Text((document.data()![
                                                         framecolumns[0]] ??
                                                     '-')
@@ -330,11 +341,13 @@ class FrameDataDetailPage extends StatelessWidget {
                                       .toList(),
                                 ))));
                   }
+                  //FireStore内のテーブルを読み込むまでは読み込み中と表示
                   return Center(
                     child: Text('読込中...'),
                   );
                 }),
           ),
+          //キャラクター選択画面へ戻るボタンを表示
           Container(
             padding: EdgeInsets.all(8),
             child: ElevatedButton(

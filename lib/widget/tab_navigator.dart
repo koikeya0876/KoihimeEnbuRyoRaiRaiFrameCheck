@@ -12,6 +12,7 @@ class TabNavigatorRoutes {
   static const String detail = '/detail';
 }
 
+//画面下部のタブの遷移先を指定
 class TabNavigator extends StatelessWidget {
   const TabNavigator({
     required Key key,

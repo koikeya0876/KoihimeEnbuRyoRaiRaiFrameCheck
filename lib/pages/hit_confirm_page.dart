@@ -141,11 +141,23 @@ class _HitConfirmPage extends State<HitConfirmPage> {
             cancel.contains('C')) canceled = true;
         if (key == '技名' && value.contains('キャンセル移行') && cancel.contains('通常技'))
           canceled = true;
-        if (key == '技名' && value.contains('追加入力') && cancel.contains('追加入力'))
-          canceled = true;
+        if (key == '技名' &&
+            value.contains('追加入力') &&
+            cancel.contains('追加入力') &&
+            !element.id.contains('追加入力2')) canceled = true;
       });
-      if (canceled && !unguardable && !air && !element.id.contains('秘奥義'))
-        _cancelMove.add(element.id);
+      if ((element.id.contains('冥誘斬・派生') || element.id.contains('冥誘斬・EX・派生')) &&
+          cancel.contains('必殺技')) canceled = true;
+      if (canceled && !unguardable && !air && !element.id.contains('秘奥義')) {
+        if (element.id.contains('・移動')) {
+          _cancelMove.add(element.id.replaceAll('・移動', ''));
+        } else {
+          if (element.id != '冥誘斬・小' &&
+              element.id != '冥誘斬・中' &&
+              element.id != '冥誘斬・大' &&
+              element.id != '冥誘斬・EX') _cancelMove.add(element.id);
+        }
+      }
     });
     convertCancelList(_cancelMove);
   }
@@ -363,6 +375,11 @@ class _HitConfirmDetailPage extends State<HitConfirmDetailPage> {
         });
       }
     });
+    if (widget._cancelMove == '暴虎馮河・小') _activeFrame = 21;
+    if (widget._cancelMove == '暴虎馮河・中') _activeFrame = 22;
+    if (widget._cancelMove == '暴虎馮河・大') _activeFrame = 23;
+    if (widget._cancelMove!.contains('冥誘斬・派生')) _activeFrame += 10;
+    if (widget._cancelMove!.contains('冥誘斬・EX・派生')) _activeFrame += 7;
     if (widget._situation == 'カウンターヒット')
       _counterFrame = _attackLevel[_attackLv];
     setState(() {

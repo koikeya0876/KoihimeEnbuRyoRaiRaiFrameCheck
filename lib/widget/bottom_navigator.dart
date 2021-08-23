@@ -1,6 +1,7 @@
 import 'package:koihime_enbu_ryorairai_frame_check/utils/tab_helper.dart';
 import 'package:flutter/material.dart';
 
+//画面下部のタブ一覧と色指定
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({required this.currentTab, required this.onSelectTab});
   final TabItem currentTab;
@@ -10,6 +11,8 @@ class BottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
+      unselectedItemColor: Theme.of(context).disabledColor,
+      selectedItemColor: Theme.of(context).accentColor,
       items: [
         _buildItem(tabItem: TabItem.top),
         _buildItem(tabItem: TabItem.framedata),
@@ -17,6 +20,7 @@ class BottomNavigation extends StatelessWidget {
         _buildItem(tabItem: TabItem.hitconfirm),
         _buildItem(tabItem: TabItem.memo),
       ],
+      currentIndex: currentTab.index,
       onTap: (index) => onSelectTab(
         TabItem.values[index],
       ),
@@ -31,12 +35,7 @@ class BottomNavigation extends StatelessWidget {
         icon,
         color: _colorTabMatching(item: tabItem),
       ),
-      title: Text(
-        text,
-        style: TextStyle(
-          color: _colorTabMatching(item: tabItem),
-        ),
-      ),
+      label: text,
     );
   }
 
