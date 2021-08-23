@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+//状況設定画面
 class SituationPage extends StatefulWidget {
   @override
   _SituationPage createState() => _SituationPage();
 }
 
 class _SituationPage extends State<SituationPage> {
+//キャラクター選択肢
   List<String> _character = [
     '未選択',
     '関羽',
@@ -25,11 +27,15 @@ class _SituationPage extends State<SituationPage> {
     '呂布',
     '張遼',
   ];
+  //技選択肢
   List<String> _move = [];
+  //状況選択肢
   List<String> _situation = ['未選択', 'ガード', 'ノーマルヒット', 'カウンターヒット'];
+  //ボタン表示用リスト
   List<DropdownMenuItem<String>> _characters = [];
   List<DropdownMenuItem<String>> _moves = [];
   List<DropdownMenuItem<String>> _situations = [];
+  //選択された状況
   String _selectedAttackCharacter = '';
   String _selectedDefenceCharacter = '';
   String? _selectedMove;
@@ -37,10 +43,12 @@ class _SituationPage extends State<SituationPage> {
   bool _setCompleted = false;
 
   @override
+  //初期化
   void initState() {
     super.initState();
+    //キャラクターリスト設定
     setCharacters();
-    //setMoves();
+    //状況リスト設定
     setSituations();
     _selectedAttackCharacter = '未選択';
     _selectedDefenceCharacter = '未選択';
@@ -87,6 +95,7 @@ class _SituationPage extends State<SituationPage> {
     }
   }
 
+//選択したキャラクターの技名一覧取得
   void setMoveList(String character) async {
     final snapshots = await FirebaseFirestore.instance
         .collection(character)
@@ -95,9 +104,7 @@ class _SituationPage extends State<SituationPage> {
     List<DocumentSnapshot> documentlist = snapshots.docs;
     _move = ['未選択'];
     documentlist.forEach((element) {
-      element.data()!.forEach((key, value) {
-        if (key == '技名') _move.add(value);
-      });
+      _move.add(element.id);
     });
     setMoves(_move);
   }
@@ -107,8 +114,10 @@ class _SituationPage extends State<SituationPage> {
       appBar: AppBar(
         title: Text('状況選択'),
       ),
+      //各状況設定項目をカラムで表示
       body: Column(
         children: <Widget>[
+          //選択肢の名称とドロップダウンをロウで表示
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -274,7 +283,7 @@ class _SituationDetailPage extends State<SituationDetailPage> {
       if (key == 'ガード硬化差') blockF = value;
       if (key == 'ヒット硬化差') hitF = value;
       if (key == 'キャンセル') {
-        if (value == '×') {
+        if (value == '×' || value == 'D') {
           _cancelPossible = false;
         } else {
           _cancelPossible = true;
@@ -291,7 +300,6 @@ class _SituationDetailPage extends State<SituationDetailPage> {
           calcSituationFrame(blockParameter, hitParameter, attackLV!);
       setSituation();
     }
-    ;
   }
 
   void setSituation() async {

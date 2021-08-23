@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//画面下部に表示するタブ一覧
 enum TabItem {
   top,
   framedata,
@@ -8,6 +9,7 @@ enum TabItem {
   memo,
 }
 
+//画面下部に表示するタブの名称
 Map<TabItem, String> tabName = {
   TabItem.top: 'トップ',
   TabItem.framedata: 'フレーム表',
@@ -16,6 +18,7 @@ Map<TabItem, String> tabName = {
   TabItem.memo: '対策メモ',
 };
 
+//画面下部に表示するタブの色指定
 Map<TabItem, MaterialColor> activeTabColor = {
   TabItem.top: Colors.lightBlue,
   TabItem.framedata: Colors.lightBlue,
