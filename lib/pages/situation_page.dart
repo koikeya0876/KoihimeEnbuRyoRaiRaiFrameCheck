@@ -104,7 +104,7 @@ class _SituationPage extends State<SituationPage> {
     List<DocumentSnapshot> documentlist = snapshots.docs;
     _move = ['未選択'];
     documentlist.forEach((element) {
-      _move.add(element.id);
+      if (!element.id.contains('移動')) _move.add(element.id);
     });
     setMoves(_move);
   }
@@ -327,15 +327,61 @@ class _SituationDetailPage extends State<SituationDetailPage> {
     if (_situationFrame == null) return;
     final snapshot = await FirebaseFirestore.instance
         .collection(widget._defenceCharacter)
-        .orderBy('発生F')
+        .orderBy("発生F")
         .get();
     List<DocumentSnapshot> documentlist = snapshot.docs;
     _punishMove = [];
     List<String> punishList = [];
     documentlist.forEach((element) {
       element.data()!.forEach((key, value) {
-        if (key == '発生F' && value <= _situationFrame) {
-          punishList.add(element.id);
+        if (key == '発生F' &&
+            value != '-' &&
+            value != '' &&
+            value <= _situationFrame &&
+            !element.id.contains('追加') &&
+            !element.id.contains('派生') &&
+            !element.id.contains('中断') &&
+            !element.id.contains('最終段') &&
+            !element.id.contains('5段目') &&
+            !element.id.contains('３段目') &&
+            !element.id.contains('４段目') &&
+            !element.id.contains('５段目') &&
+            !element.id.contains('・2段目') &&
+            !element.id.contains('移動') &&
+            !element.id.contains('秘奥義') &&
+            !element.id.contains('威信斬・中') &&
+            !element.id.contains('威信斬・大') &&
+            !element.id.contains('威信斬・当て身成功') &&
+            !element.id.contains('キャンセル') &&
+            !element.id.contains('不惜身命') &&
+            !element.id.contains('3段目')) {
+          if (element.id.contains('怒髪衝天')) {
+            if (element.id.contains('・小・') && value + 5 <= _situationFrame)
+              punishList.add(element.id);
+            if (element.id.contains('中') && value + 17 <= _situationFrame)
+              punishList.add(element.id);
+            if (element.id.contains('・大・') && value + 34 <= _situationFrame)
+              punishList.add(element.id);
+          } else if (element.id.contains('暴虎')) {
+            if (element.id.contains('・小・') && value + 19 <= _situationFrame)
+              punishList.add(element.id);
+            if (element.id.contains('中') && value + 20 <= _situationFrame)
+              punishList.add(element.id);
+            if (element.id.contains('・大・') && value + 21 <= _situationFrame)
+              punishList.add(element.id);
+          } else if (element.id.contains('冥誘斬')) {
+            if (element.id.contains('・小・') &&
+                16 <= int.parse(_situationFrame.toString()))
+              punishList.add(element.id);
+            if (element.id.contains('中') &&
+                24 <= int.parse(_situationFrame.toString()))
+              punishList.add(element.id);
+            if (element.id.contains('・大・') &&
+                30 <= int.parse(_situationFrame.toString()))
+              punishList.add(element.id);
+          } else {
+            if (value != '-') punishList.add(element.id);
+          }
         }
       });
     });
@@ -354,21 +400,12 @@ class _SituationDetailPage extends State<SituationDetailPage> {
         String cancel = '';
         element.data()!.forEach((key, value) {
           if (key == '技名') {
-            print(1);
-            print(element.id);
             moveName = value;
-            print(value);
           }
           if (key == '発生F') {
-            print(2);
-            print(element.id);
             startUp = value.toString();
-            print(value);
           }
           if (key == '攻撃リーチ') {
-            print(3);
-            print(element.id);
-            print(value);
             if (value == "-") {
               reach = value;
             } else if (value is String) {
@@ -377,22 +414,29 @@ class _SituationDetailPage extends State<SituationDetailPage> {
             } else {
               reach = value.toString();
             }
-            print(value);
           }
           if (key == 'キャンセル') {
-            print(4);
-            print(element.id);
             cancel = value;
-            print(value);
           }
         });
+        if (moveName == '怒髪衝天・小・攻撃') startUp = '10';
+        if (moveName == '怒髪衝天・中・攻撃') startUp = '22';
+        if (moveName == '怒髪衝天・大・攻撃') startUp = '39';
+        if (moveName == '暴虎馮河・小・攻撃') startUp = '21';
+        if (moveName == '暴虎馮河・中・攻撃') startUp = '22';
+        if (moveName == '暴虎馮河・大・攻撃') startUp = '23';
+        if (moveName == '冥誘斬・小') startUp = '16';
+        if (moveName == '冥誘斬・中') startUp = '24';
+        if (moveName == '冥誘斬・大') startUp = '30';
         setState(() {
-          _punishMove.add({
-            "技名": moveName,
-            "発生F": startUp,
-            "攻撃リーチ": reach,
-            "キャンセル": cancel
-          });
+          if (moveName != '' && startUp != '' && reach != '' && cancel != '')
+            _punishMove.add({
+              "技名": moveName,
+              "発生F": startUp,
+              "攻撃リーチ": reach,
+              "キャンセル": cancel
+            });
+          print(moveName + " " + startUp + " " + reach + " " + cancel);
         });
       }
     });

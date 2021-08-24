@@ -124,22 +124,23 @@ class _HitConfirmPage extends State<HitConfirmPage> {
       bool canceled = false;
       bool unguardable = false;
       bool air = false;
+      bool atemi = false;
       element.data()!.forEach((key, value) {
         if (key == 'コマンド' &&
             value is int &&
             value >= 10 &&
-            cancel.contains('必殺技')) canceled = true;
-        if (key == 'ガード' && value == 'ガード不能' && cancel.contains('必殺技'))
+            cancel.contains('必殺')) canceled = true;
+        if (key == 'ガード' && value == 'ガード不能' && cancel.contains('必殺'))
           unguardable = true;
-        if (key == '攻撃高さ' && value == '空中' && cancel.contains('必殺技'))
-          air = true;
+        if (key == '攻撃高さ' && value == '空中' && cancel.contains('必殺')) air = true;
+        if (key == 'シェイク属性' && value == '当て身') atemi = true;
         if (key == '技名' &&
             (value == '立ち小' || value == 'しゃがみ小') &&
             cancel.contains('連打')) canceled = true;
         if (key == '技名' &&
             (value.contains('追加') || value.contains('派生')) &&
             cancel.contains('C')) canceled = true;
-        if (key == '技名' && value.contains('キャンセル移行') && cancel.contains('通常技'))
+        if (key == '技名' && value.contains('キャンセル移行') && cancel.contains('通常'))
           canceled = true;
         if (key == '技名' &&
             value.contains('追加入力') &&
@@ -148,14 +149,22 @@ class _HitConfirmPage extends State<HitConfirmPage> {
       });
       if ((element.id.contains('冥誘斬・派生') || element.id.contains('冥誘斬・EX・派生')) &&
           cancel.contains('必殺技')) canceled = true;
-      if (canceled && !unguardable && !air && !element.id.contains('秘奥義')) {
+      if (canceled &&
+          !unguardable &&
+          !air &&
+          !atemi &&
+          !element.id.contains('秘奥義')) {
         if (element.id.contains('・移動')) {
           _cancelMove.add(element.id.replaceAll('・移動', ''));
         } else {
           if (element.id != '冥誘斬・小' &&
               element.id != '冥誘斬・中' &&
               element.id != '冥誘斬・大' &&
-              element.id != '冥誘斬・EX') _cancelMove.add(element.id);
+              element.id != '冥誘斬・EX') {
+            if (!(element.id.contains('返し刃') &&
+                !element.id.contains(_selectedMove.toString())))
+              _cancelMove.add(element.id);
+          }
         }
       }
     });
@@ -358,7 +367,12 @@ class _HitConfirmDetailPage extends State<HitConfirmDetailPage> {
       if (element.id == widget._move || element.id == widget._cancelMove) {
         element.data()!.forEach((key, value) {
           if (element.id == widget._move) {
-            if (key == 'C猶予') _cancelGrace = value;
+            if (key == '持続F')
+              _cancelGrace +=
+                  int.parse(value.toString().split('/')[0].split('(')[0]);
+            if (key == '硬化F')
+              _cancelGrace +=
+                  int.parse(value.toString().split('/')[0].split('(')[0]);
             if (key == 'ヒットストップF') _hitstop = value;
             if (key == 'アタックLV') _attackLv = value;
             if (key == 'ヒット硬化差') {
@@ -378,8 +392,13 @@ class _HitConfirmDetailPage extends State<HitConfirmDetailPage> {
     if (widget._cancelMove == '暴虎馮河・小') _activeFrame = 21;
     if (widget._cancelMove == '暴虎馮河・中') _activeFrame = 22;
     if (widget._cancelMove == '暴虎馮河・大') _activeFrame = 23;
+    if (widget._cancelMove == '怒髪衝天・小') _activeFrame = 10;
+    if (widget._cancelMove == '怒髪衝天・中') _activeFrame = 22;
+    if (widget._cancelMove == '怒髪衝天・大') _activeFrame = 39;
     if (widget._cancelMove!.contains('冥誘斬・派生')) _activeFrame += 10;
     if (widget._cancelMove!.contains('冥誘斬・EX・派生')) _activeFrame += 7;
+    if (widget._cancelMove!.contains('伏撃射・発生')) _activeFrame += 8;
+    if (widget._cancelMove!.contains('伏撃射・EX・発生')) _activeFrame += 7;
     if (widget._situation == 'カウンターヒット')
       _counterFrame = _attackLevel[_attackLv];
     setState(() {
